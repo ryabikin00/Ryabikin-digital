@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Пульт дня — Кофейня «Утро»</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0a0a0f;--panel:#14141c;--panel-2:#1c1c28;--border:#2a2a38;--text:#f5f5f7;--muted:#a1a1aa;--accent:#8b5cf6;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding:24px;}
+.wrap{max-width:1280px;margin:0 auto;}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.top h1{font-size:1.5rem;}
+.top h1 span{color:var(--accent);}
+.top .date{color:var(--muted);font-size:.9rem;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;}
+.card .label{color:var(--muted);font-size:.85rem;margin-bottom:8px;}
+.card .val{font-size:1.8rem;font-weight:700;}
+.card .delta{font-size:.85rem;margin-top:6px;}
+.delta.up{color:var(--green);}
+.delta.down{color:var(--red);}
+h2{font-size:1.1rem;margin-bottom:16px;color:var(--muted);font-weight:500;}
+.alert-banner{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.4);border-radius:14px;padding:16px 20px;margin-bottom:24px;display:flex;gap:12px;align-items:center;}
+.alert-banner b{color:var(--red);}
+.two{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:24px;}
+@media(max-width:900px){.two{grid-template-columns:1fr;}}
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+.inv-item{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+.inv-item.low{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.5);}
+.inv-item.warn{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.5);}
+.inv-item span:first-child{font-size:.9rem;}
+.inv-item b{font-size:1.05rem;}
+.inv-item .tag{font-size:.7rem;padding:2px 6px;border-radius:4px;font-weight:600;}
+.inv-item.low .tag{background:var(--red);color:#fff;}
+.inv-item.warn .tag{background:var(--amber);color:#000;}
+.legend{display:flex;gap:16px;font-size:.8rem;color:var(--muted);margin-top:12px;flex-wrap:wrap;}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle;}
+.chart-box{position:relative;height:260px;}
+.compare{display:flex;gap:16px;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);font-size:.9rem;}
+.compare:last-child{border-bottom:none;}
+.compare .name{color:var(--muted);}
+.compare .sum{font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>☕ Пульт дня <span>· Кофейня «Утро»</span></h1>
+    <div class="date">Сегодня: 31 октября 2026</div>
+  </div>
+
+  <!-- Выручка -->
+  <div class="grid">
+    <div class="card">
+      <div class="label">Выручка сегодня</div>
+      <div class="val">38 400 ₽</div>
+      <div class="delta up">↑ +4 100 ₽ ко вчера (12%)</div>
+    </div>
+    <div class="card">
+      <div class="label">Выручка за неделю</div>
+      <div class="val">241 800 ₽</div>
+      <div class="delta down">↓ −21 000 ₽ к прошлой неделе (−8%)</div>
+    </div>
+    <div class="card">
+      <div class="label">Выручка за месяц</div>
+      <div class="val">1 042 300 ₽</div>
+      <div class="delta up">↑ +5% к прошлому месяцу</div>
+    </div>
+    <div class="card">
+      <div class="label">Средний чек</div>
+      <div class="val">312 ₽</div>
+      <div class="delta up">↑ +18 ₽ ко вчера</div>
+    </div>
+  </div>
+
+  <!-- Алерт -->
+  <div class="alert-banner">
+    <b>⚠️</b>
+    <div><b>4 позиции заканчиваются.</b> Американо, Флэт уайт, Мокаччино и Синнабон ниже порога 20 шт — пора докупить.</div>
+  </div>
+
+  <!-- Наличие + Сравнение недель -->
+  <div class="two">
+    <div class="card">
+      <h2>Наличие ассортимента</h2>
+      <div class="inv-grid">
+        <div class="inv-item"><span>Капучино</span><b>45</b></div>
+        <div class="inv-item"><span>Латте</span><b>38</b></div>
+        <div class="inv-item low"><span>Американо</span><b>18</b><span class="tag">мало</span></div>
+        <div class="inv-item low"><span>Флэт уайт</span><b>12</b><span class="tag">мало</span></div>
+        <div class="inv-item"><span>Раф</span><b>27</b></div>
+        <div class="inv-item low"><span>Мокаччино</span><b>8</b><span class="tag">мало</span></div>
+        <div class="inv-item"><span>Чай чёрный</span><b>120</b></div>
+        <div class="inv-item"><span>Чай зелёный</span><b>95</b></div>
+        <div class="inv-item"><span>Круассан</span><b>22</b></div>
+        <div class="inv-item low"><span>Синнабон</span><b>6</b><span class="tag">мало</span></div>
+        <div class="inv-item"><span>Маффин</span><b>31</b></div>
+        <div class="inv-item"><span>Чизкейк</span><b>24</b></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--panel-2);border:1px solid var(--border)"></i>в достатке</span>
+        <span><i style="background:var(--red)"></i>мало (меньше 20 шт)</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Неделя vs прошлая неделя</h2>
+      <div class="compare"><span class="name">Эта неделя</span><span class="sum">241 800 ₽</span></div>
+      <div class="compare"><span class="name">Прошлая неделя</span><span class="sum">262 800 ₽</span></div>
+      <div class="compare"><span class="name">Разница</span><span class="sum" style="color:var(--red)">−21 000 ₽</span></div>
+      <div class="compare"><span class="name">В процентах</span><span class="sum" style="color:var(--red)">−8%</span></div>
+      <div class="compare"><span class="name">Средний чек</span><span class="sum">312 ₽ / 298 ₽</span></div>
+      <div class="compare"><span class="name">Чеков за неделю</span><span class="sum">775 / 882</span></div>
+      <div style="margin-top:14px;padding:10px;background:rgba(239,68,68,.1);border-radius:8px;font-size:.85rem;color:var(--muted)">
+        💡 Возможная причина: на прошлой неделе было 3 дождливых дня, что обычно даёт +15% к кофе с собой. Также в субботу был выходной.
+      </div>
+    </div>
+  </div>
+
+  <!-- График по часам -->
+  <div class="card">
+    <h2>Продажи по часам (сегодня)</h2>
+    <div class="chart-box"><canvas id="hoursChart"></canvas></div>
+  </div>
+</div>
+
+<script>
+new Chart(document.getElementById('hoursChart'), {
+  type: 'bar',
+  data: {
+    labels: ['8','9','10','11','12','13','14','15','16','17','18','19','20'],
+    datasets: [{
+      label: 'Выручка, ₽',
+      data: [1200, 3800, 4200, 3400, 2600, 3200, 2800, 2100, 1800, 2400, 3600, 4100, 3200],
+      backgroundColor: ctx => ctx.raw > 3500 ? '#8b5cf6' : 'rgba(139,92,246,0.4)',
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: '#2a2a38' }, ticks: { color: '#a1a1aa' } },
+      y: { grid: { color: '#2a2a38' }, ticks: { color: '#a1a1aa' }, beginAtZero: true }
+    }
+  }
+});
+</script>
+</body>
+</html>

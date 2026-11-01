@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { margin: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #f4f6f8; color: #15171a; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 40px 0; }
+  .screen { width: 1200px; background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+  
+  /* Шапка */
+  .header { display: flex; justify-content: space-between; align-items: center; padding: 20px 60px; background: #fff; }
+  .logo { font-size: 24px; font-weight: 800; color: #12b8ea; letter-spacing: -0.5px; }
+  .nav a { color: #747a82; text-decoration: none; margin-left: 32px; font-size: 15px; font-weight: 500; transition: color 0.2s; }
+  .nav a:hover { color: #12b8ea; }
+
+  /* Главный экран */
+  .hero { padding: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; background: #eafbff; }
+  .hero-text h1 { font-size: 48px; font-weight: 800; line-height: 1.1; margin: 0 0 24px; color: #15171a; letter-spacing: -1px; }
+  .hero-text p { color: #747a82; font-size: 18px; line-height: 1.6; margin-bottom: 32px; }
+  .btn { background: #12b8ea; color: #fff; padding: 16px 40px; border-radius: 12px; text-decoration: none; font-weight: 700; display: inline-block; font-size: 16px; transition: background 0.2s; box-shadow: 0 4px 12px rgba(18, 184, 234, 0.3); }
+  .btn:hover { background: #0ea5d4; }
+  
+  /* 3D-иллюстрация (заглушка) */
+  .hero-visual { background: #fff; border-radius: 24px; height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+  .hero-visual .blob { font-size: 120px; }
+  .hero-visual .tag { position: absolute; top: 20px; right: 20px; background: #5a35e8; color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+
+  /* Статистика */
+  .stats { display: flex; justify-content: space-around; padding: 40px 60px; background: #fff; border-bottom: 1px solid #e4e7ea; }
+  .stat-item { text-align: center; }
+  .stat-item h3 { font-size: 36px; font-weight: 800; margin: 0 0 4px; color: #12b8ea; }
+  .stat-item p { color: #747a82; font-size: 14px; margin: 0; font-weight: 500; }
+
+  /* Курсы */
+  .courses { padding: 60px; background: #fff; }
+  .section-title { text-align: center; font-size: 32px; font-weight: 800; margin: 0 0 40px; letter-spacing: -0.5px; }
+  .courses-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .course-card { background: #f4f6f8; border-radius: 20px; padding: 30px; transition: transform 0.2s; }
+  .course-card:hover { transform: translateY(-4px); }
+  .course-icon { font-size: 36px; margin-bottom: 16px; display: inline-block; }
+  .course-card h3 { font-size: 20px; margin: 0 0 8px; font-weight: 700; }
+  .course-card p { color: #747a82; font-size: 14px; line-height: 1.5; margin: 0 0 20px; }
+  .course-tag { display: inline-block; background: #eafbff; color: #12b8ea; padding: 6px 14px; border-radius: 30px; font-size: 12px; font-weight: 700; }
+
+  /* Преподаватель */
+  .tutor { padding: 60px; background: #f4f6f8; display: grid; grid-template-columns: 300px 1fr; gap: 40px; align-items: center; border-top: 1px solid #e4e7ea; }
+  .tutor-avatar { width: 200px; height: 200px; background: #12b8ea; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 80px; color: #fff; border: 6px solid #fff; box-shadow: 0 8px 24px rgba(18, 184, 234, 0.2); }
+  .tutor-info h2 { font-size: 28px; font-weight: 800; margin: 0 0 8px; }
+  .tutor-info .role { color: #12b8ea; font-weight: 600; margin-bottom: 16px; display: block; }
+  .tutor-info p { color: #747a82; font-size: 16px; line-height: 1.6; max-width: 600px; }
+</style>
+</head>
+<body>
+<div class="screen">
+  <div class="header">
+    <div class="logo">Онлайн-репетитор</div>
+    <div class="nav"><a href="#">Курсы</a><a href="#">Преподаватели</a><a href="#">Отзывы</a></div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-text">
+      <h1>Учись в своём темпе и достигай большего</h1>
+      <p>Индивидуальные занятия с лучшими преподавателями. Подготовка к экзаменам, повышение успеваемости и новые навыки.</p>
+      <a href="#" class="btn">Начать бесплатно</a>
+    </div>
+    <div class="hero-visual">
+      <span class="tag">Твой прогресс</span>
+      <div class="blob">🧑‍🎓</div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-item"><h3>12 000+</h3><p>учеников</p></div>
+    <div class="stat-item"><h3>98%</h3><p>довольны результатом</p></div>
+    <div class="stat-item"><h3>4.9</h3><p>средний рейтинг</p></div>
+    <div class="stat-item"><h3>24/7</h3><p>поддержка</p></div>
+  </div>
+
+  <div class="courses">
+    <h2 class="section-title">Популярные направления</h2>
+    <div class="courses-grid">
+      <div class="course-card">
+        <div class="course-icon">📐</div>
+        <h3>Математика</h3>
+        <p>Подготовка к ЕГЭ/ОГЭ, олимпиадам и просто для себя.</p>
+        <span class="course-tag">Хит</span>
+      </div>
+      <div class="course-card">
+        <div class="course-icon">🗣️</div>
+        <h3>Английский язык</h3>
+        <p>Разговорный, для работы и путешествий. Без скучных правил.</p>
+        <span class="course-tag">Новинка</span>
+      </div>
+      <div class="course-card">
+        <div class="course-icon">💻</div>
+        <h3>Информатика</h3>
+        <p>Программирование на Python, алгоритмы и подготовка к экзаменам.</p>
+        <span class="course-tag">Топ</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tutor">
+    <div class="tutor-avatar">👩‍🏫</div>
+    <div class="tutor-info">
+      <h2>Анна Смирнова</h2>
+      <span class="role">Преподаватель математики, эксперт ЕГЭ</span>
+      <p>Стаж 10 лет. Помогла более 500 ученикам поступить в ведущие вузы страны. Объясняю сложное простым языком и нахожу подход к каждому.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

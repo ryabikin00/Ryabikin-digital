@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: #0f172a; color: #fff; }
+  .screen { width: 1200px; margin: 40px auto; background: #1e293b; border-radius: 16px; overflow: hidden; border: 1px solid #334155; }
+  
+  /* Исправил опечатку в justify-content и выровнял меню */
+  .header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: #0f172a; }
+  
+  /* Изменил ГРУЗ-ТЕХ на Грузоперевозки и чуть уменьшил шрифт для аккуратности */
+  .logo { font-size: 22px; font-weight: 900; color: #f97316; letter-spacing: 0.5px; }
+  
+  .nav a { color: #94a3b8; text-decoration: none; margin-left: 20px; transition: color 0.2s; }
+  .nav a:hover { color: #fff; }
+  
+  .hero { padding: 80px 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .hero h1 { font-size: 48px; line-height: 1.1; margin-bottom: 20px; }
+  .hero span { color: #f97316; }
+  
+  /* Добавил box-sizing: border-box, чтобы кнопки с padding не выезжали за рамки */
+  .btn { background: #f97316; color: #fff; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block; box-sizing: border-box; transition: background 0.2s; }
+  .btn:hover { background: #ea580c; }
+  
+  .calc-card { background: #0f172a; padding: 30px; border-radius: 12px; border: 1px solid #334155; }
+  .form-group { margin-bottom: 15px; }
+  .form-group label { display: block; color: #94a3b8; font-size: 14px; margin-bottom: 5px; }
+  .form-group input, .form-group select { width: 100%; padding: 12px; background: #1e293b; border: 1px solid #334155; color: #fff; border-radius: 6px; box-sizing: border-box; }
+  
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 40px; }
+  .card { background: #0f172a; padding: 24px; border-radius: 12px; border: 1px solid #334155; }
+  .card h3 { color: #f97316; margin-top: 0; }
+</style>
+</head>
+<body>
+
+  <!-- Скриншот 1: Главный экран -->
+  <div class="screen">
+    <div class="header">
+      <!-- Заменили на "Грузоперевозки" -->
+      <div class="logo">Грузоперевозки</div>
+      <div class="nav"><a href="#">Автопарк</a><a href="#">Калькулятор</a><a href="#">Контакты</a></div>
+    </div>
+    <div class="hero">
+      <div>
+        <h1>Быстрые грузоперевозки по России <span>от 1 часа</span></h1>
+        <p style="color: #94a3b8; margin-bottom: 30px;">Экспресс-доставка от 500 кг до 20 тонн с гарантией сохранности груза по договору.</p>
+        <a href="#" class="btn">Рассчитать стоимость</a>
+      </div>
+      <div class="calc-card">
+        <h3 style="margin-top:0;">Быстрый расчет</h3>
+        <div class="form-group"><label>Откуда</label><input type="text" value="Москва"></div>
+        <div class="form-group"><label>Куда</label><input type="text" value="Санкт-Петербург"></div>
+        <div class="form-group"><label>Вес (тонн)</label><input type="number" value="2.5"></div>
+        <!-- Теперь кнопка идеально вписывается в рамки калькулятора -->
+        <a href="#" class="btn" style="width: 100%; text-align: center;">Получить смету</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Скриншот 2: Карточки автопарка -->
+  <div class="screen">
+    <h2 style="padding: 40px 40px 0; margin: 0;">Наш автопарк</h2>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Газель 1.5т</h3>
+        <p style="color: #94a3b8;">Идеально для квартирных переездов и мелких партий.</p>
+        <p><strong>От 900 руб/час</strong></p>
+      </div>
+      <div class="card">
+        <h3>Пятитонник</h3>
+        <p style="color: #94a3b8;">Перевозка оборудования и средних коммерческих грузов.</p>
+        <p><strong>От 1 800 руб/час</strong></p>
+      </div>
+      <div class="card">
+        <h3>Фура 20т</h3>
+        <p style="color: #94a3b8;">Междугородние перевозки крупных партий товаров.</p>
+        <p><strong>От 45 руб/км</strong></p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

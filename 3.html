@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дашборд — Салон «Aurora Beauty»</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0a0a0f;--panel:#14141c;--panel-2:#1c1c28;--border:#2a2a38;--text:#f5f5f7;--muted:#a1a1aa;--accent:#8b5cf6;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding:24px;}
+.wrap{max-width:1280px;margin:0 auto;}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.top h1{font-size:1.5rem;}
+.top h1 span{color:var(--accent);}
+.top .date{color:var(--muted);font-size:.9rem;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;}
+.card .label{color:var(--muted);font-size:.85rem;margin-bottom:8px;}
+.card .val{font-size:1.7rem;font-weight:700;}
+.card .delta{font-size:.85rem;margin-top:6px;}
+.delta.up{color:var(--green);}.delta.down{color:var(--red);}
+h2{font-size:1.05rem;margin-bottom:16px;color:var(--muted);font-weight:500;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+@media(max-width:900px){.two{grid-template-columns:1fr;}}
+.chart-box{position:relative;height:240px;}
+.emp-list{display:flex;flex-direction:column;gap:12px;}
+.emp{background:var(--panel-2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.emp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;}
+.emp-name{font-weight:600;display:flex;align-items:center;gap:10px;}
+.avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;font-size:.9rem;}
+.emp-stats{display:flex;gap:14px;font-size:.8rem;color:var(--muted);flex-wrap:wrap;}
+.emp-stats b{color:var(--text);}
+.load-bar{height:6px;background:var(--panel);border-radius:3px;overflow:hidden;margin-top:8px;}
+.load-bar>div{height:100%;border-radius:3px;}
+.load-bar.high>div{background:linear-gradient(90deg,var(--red),#f87171);}
+.load-bar.mid>div{background:linear-gradient(90deg,var(--accent),#a78bfa);}
+.load-bar.low>div{background:linear-gradient(90deg,var(--amber),#fbbf24);}
+.emp-tag{font-size:.7rem;padding:2px 8px;border-radius:5px;font-weight:600;}
+.emp-tag.top{background:rgba(34,197,94,.15);color:var(--green);}
+.emp-tag.idle{background:rgba(245,158,11,.15);color:var(--amber);}
+
+/* Недельная сетка */
+.week-table{width:100%;border-collapse:collapse;font-size:.88rem;}
+.week-table th,.week-table td{padding:10px 8px;text-align:center;border-bottom:1px solid var(--border);}
+.week-table th{color:var(--muted);font-weight:500;font-size:.8rem;}
+.week-table td:first-child,.week-table th:first-child{text-align:left;font-weight:600;}
+.week-table td:first-child{white-space:nowrap;}
+.cell{padding:4px 8px;border-radius:6px;font-weight:600;display:inline-block;min-width:52px;}
+.cell.ok{background:rgba(34,197,94,.15);color:var(--green);}
+.cell.mid{background:rgba(139,92,246,.15);color:#a78bfa;}
+.cell.warn{background:rgba(245,158,11,.15);color:var(--amber);}
+.cell.bad{background:rgba(239,68,68,.15);color:var(--red);}
+.legend{display:flex;gap:16px;font-size:.78rem;color:var(--muted);margin-top:14px;flex-wrap:wrap;}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle;}
+.alert-box{margin-top:16px;padding:12px;background:rgba(245,158,11,.1);border-radius:8px;font-size:.85rem;color:var(--muted);border:1px solid rgba(245,158,11,.3);}
+.alert-box b{color:var(--amber);}
+
+/* Материалы */
+.mat-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;}
+.mat{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;font-size:.9rem;gap:6px;}
+.mat.low{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.5);}
+.mat.warn{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.5);}
+.mat b{font-size:1rem;}
+.mat-tag{font-size:.7rem;padding:2px 6px;border-radius:4px;font-weight:600;}
+.mat.low .mat-tag{background:var(--red);color:#fff;}
+.mat.warn .mat-tag{background:var(--amber);color:#000;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>💅 Aurora Beauty <span>· Салон красоты</span></h1>
+    <div class="date">Сегодня: 31 октября 2026, суббота</div>
+  </div>
+
+  <div class="grid">
+    <div class="card"><div class="label">Посещений сегодня</div><div class="val">38</div><div class="delta down">↓ −4 к вчера (42)</div></div>
+    <div class="card"><div class="label">Загруженность сегодня</div><div class="val">78%</div><div class="delta up">↑ +6% ко вчера</div></div>
+    <div class="card"><div class="label">Записей на завтра</div><div class="val">24</div><div class="delta down">↓ недобор: 50%</div></div>
+    <div class="card"><div class="label">Выручка сегодня</div><div class="val">52 400 ₽</div><div class="delta up">↑ +12% ко вчера</div></div>
+  </div>
+
+  <div class="two">
+    <div class="card">
+      <h2>Посещения за неделю</h2>
+      <div class="chart-box"><canvas id="visitsChart"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>Сотрудники сегодня — кто как работает</h2>
+      <div class="emp-list">
+        <div class="emp">
+          <div class="emp-head">
+            <div class="emp-name"><div class="avatar" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)">А</div>Анна <span class="emp-tag top">лидер дня</span></div>
+            <div class="emp-stats"><span>Приняла <b>12</b></span><span>Выручка <b>18 400 ₽</b></span></div>
+          </div>
+          <div class="load-bar high"><div style="width:95%"></div></div>
+        </div>
+        <div class="emp">
+          <div class="emp-head">
+            <div class="emp-name"><div class="avatar" style="background:linear-gradient(135deg,#3b82f6,#60a5fa)">М</div>Мария</div>
+            <div class="emp-stats"><span>Приняла <b>10</b></span><span>Выручка <b>14 200 ₽</b></span></div>
+          </div>
+          <div class="load-bar mid"><div style="width:80%"></div></div>
+        </div>
+        <div class="emp">
+          <div class="emp-head">
+            <div class="emp-name"><div class="avatar" style="background:linear-gradient(135deg,#22c55e,#4ade80)">И</div>Игорь</div>
+            <div class="emp-stats"><span>Принял <b>8</b></span><span>Выручка <b>11 100 ₽</b></span></div>
+          </div>
+          <div class="load-bar mid"><div style="width:65%"></div></div>
+        </div>
+        <div class="emp">
+          <div class="emp-head">
+            <div class="emp-name"><div class="avatar" style="background:linear-gradient(135deg,#f59e0b,#fbbf24)">О</div>Ольга <span class="emp-tag idle">много окон</span></div>
+            <div class="emp-stats"><span>Приняла <b>6</b></span><span>Выручка <b>8 700 ₽</b></span></div>
+          </div>
+          <div class="load-bar low"><div style="width:45%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Расписание на неделю по сотрудникам -->
+  <div class="card" style="margin-bottom:24px;">
+    <h2>Записи на неделю — по сотрудникам и дням</h2>
+    <table class="week-table">
+      <thead>
+        <tr>
+          <th>Сотрудник</th>
+          <th>Сегодня 31.10</th>
+          <th>Завтра 01.11</th>
+          <th>Пн 02.11</th>
+          <th>Вт 03.11</th>
+          <th>Ср 04.11</th>
+          <th>Чт 05.11</th>
+          <th>Пт 06.11</th>
+          <th>Сред.</th>
+        </tr>
+      </thead>
+      <tbody id="weekBody"></tbody>
+    </table>
+    <div class="legend">
+      <span><i style="background:var(--red)"></i>простой (0–40%)</span>
+      <span><i style="background:var(--amber)"></i>недобор (41–65%)</span>
+      <span><i style="background:var(--accent)"></i>норма (66–85%)</span>
+      <span><i style="background:var(--green)"></i>высокая (86–100%)</span>
+    </div>
+    <div class="alert-box">
+      <b>⚠️ Внимание:</b> у <b>Ольги</b> на завтра и в понедельник всего 3 и 2 записи — сильный простой. Стоит перекинуть к ней часть клиентов от Анны (у неё завтра 10/12) и запустить напоминание постоянным клиентам.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Остатки материалов</h2>
+    <div class="mat-list">
+      <div class="mat low"><span>Краска для волос</span><b>12</b><span class="mat-tag">мало</span></div>
+      <div class="mat"><span>Лак для ногтей</span><b>45</b></div>
+      <div class="mat low"><span>Маска для лица</span><b>8</b><span class="mat-tag">мало</span></div>
+      <div class="mat"><span>Шампунь</span><b>30</b></div>
+      <div class="mat warn"><span>Гель для укладки</span><b>15</b><span class="mat-tag">запас</span></div>
+      <div class="mat"><span>Ватные диски</span><b>120</b></div>
+      <div class="mat"><span>Фольга</span><b>60</b></div>
+      <div class="mat low"><span>Скраб для тела</span><b>5</b><span class="mat-tag">мало</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const MAX = 12;
+const days = ['Сегодня','Завтра','Пн','Вт','Ср','Чт','Пт'];
+const bookings = {
+  'Анна':  [12,10,9,8,6,10,11],
+  'Мария': [10,5,6,4,5,7,8],
+  'Игорь': [8,6,5,5,4,6,7],
+  'Ольга': [6,3,2,4,3,5,4],
+};
+
+function cls(pct){
+  if (pct <= 40) return 'bad';
+  if (pct <= 65) return 'warn';
+  if (pct <= 85) return 'mid';
+  return 'ok';
+}
+
+document.getElementById('weekBody').innerHTML = Object.entries(bookings).map(([name, arr]) => {
+  const avg = Math.round(arr.reduce((a,b)=>a+b,0)/arr.length/MAX*100);
+  return `<tr>
+    <td>${name}</td>
+    ${arr.map(n => {
+      const pct = Math.round(n/MAX*100);
+      return `<td><span class="cell ${cls(pct)}">${n}/${MAX}</span></td>`;
+    }).join('')}
+    <td><span class="cell ${cls(avg)}">${avg}%</span></td>
+  </tr>`;
+}).join('');
+
+new Chart(document.getElementById('visitsChart'), {
+  type:'line',
+  data:{
+    labels:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
+    datasets:[
+      {label:'Эта неделя', data:[34,38,41,45,48,42,38], borderColor:'#8b5cf6', backgroundColor:'rgba(139,92,246,0.15)', fill:true, tension:0.4, pointRadius:4, pointBackgroundColor:'#8b5cf6'},
+      {label:'Прошлая', data:[31,33,38,40,44,40,35], borderColor:'#a1a1aa', borderDash:[5,5], tension:0.4, pointRadius:3, pointBackgroundColor:'#a1a1aa', fill:false}
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#a1a1aa',boxWidth:12}}},
+    scales:{
+      x:{grid:{color:'#2a2a38'},ticks:{color:'#a1a1aa'}},
+      y:{grid:{color:'#2a2a38'},ticks:{color:'#a1a1aa'},beginAtZero:true}
+    }
+  }
+});
+</script>
+</body>
+</html>
