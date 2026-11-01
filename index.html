@@ -428,7 +428,7 @@ function openDemo(key){
   if (!d) return;
   const isMobile = window.innerWidth <= 768;
   if (isMobile) {
-      window.open(d.file, '_blank');
+      window.location.href = d.file;
   } else {
       frame.src = d.file;
       ext.href = d.file;
